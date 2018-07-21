@@ -1,0 +1,20 @@
+name: incrementally_loading_listview
+description: An extension of the list view widget for incrementally loading data on scrolling
+version: 0.0.1
+author: Michael Bui <maikub84@gmail.com>
+homepage: https://github.com/MaikuB/incrementally_loading_listview
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+
+environment:
+  sdk: ">=2.0.0-dev.28.0 <3.0.0"
+  flutter: ">=0.1.4 <2.0.0"
+
