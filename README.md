@@ -1,10 +1,10 @@
 # incrementally_loading_listview
 
-An extension of the ListView widget with extensions for incrementally loading items upon scrolling.
+An extension of the Flutter ListView widget for incrementally loading items upon scrolling.
 
 ## Getting Started
 
-There's a working example that can run to see how it works.
+There's a working example that can be run to see how it works.
 
 First import the library
 
@@ -12,7 +12,7 @@ First import the library
 import 'package:incrementally_loading_listview/incrementally_loading_listview.dart';
 ```
 
-You can then use the `IncrementallyLoadingListView` widget in a similar you would with the `ListView.builder` constructor
+You can then use the `IncrementallyLoadingListView` widget in a similar way you would with the `ListView.builder` constructor
 
 ```
 return IncrementallyLoadingListView(
@@ -29,7 +29,7 @@ return IncrementallyLoadingListView(
 });
 ```
 
-The widget allows passing in the same ones you would to the `ListView.builder` constructor but `itemCount` is required so that when an item scrolls into view, it can see if it should attempt to load more items. The other parameters that can be specified are
+The widget allows passing in the same parameters you would to the `ListView.builder` constructor but `itemCount` is required so that when an item scrolls into view, it can see if it should attempt to load more items. The other parameters that can be specified are
 
 - `hasMore`: a boolean that indicates if there are more items that can be loaded
 - `loadMore`: a reference to an asynchronous function that loads more items
