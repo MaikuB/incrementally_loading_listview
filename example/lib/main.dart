@@ -46,19 +46,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Future _initialLoad;
 
   Future _loadMoreItems() async {
-    setState(() {
-      _loadingMore = true;
-    });
     final totalItems = items.length;
     await Future.delayed(Duration(seconds: 3), () {
       for (var i = 0; i < _numItemsPage; i++) {
         items.add(Item('Item ${totalItems + i + 1}'));
       }
     });
-    setState(() {
-      _hasMoreItems = items.length < _maxItems;
-      _loadingMore = false;
-    });
+
+    _hasMoreItems = items.length < _maxItems;
   }
 
   @override
@@ -88,12 +83,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 return Center(child: CircularProgressIndicator());
               case ConnectionState.done:
                 return IncrementallyLoadingListView(
-                  hasMore: _hasMoreItems,
-                  itemCount: items.length,
+                  hasMore: () => _hasMoreItems,
+                  itemCount: () => items.length,
                   loadMore: () async {
                     // can shorten to "loadMore: _loadMoreItems" but this syntax is used to demonstrate that
                     // functions with parameters can also be invoked if needed
                     await _loadMoreItems();
+                  },
+                  onLoadMore: (loadingMore) {
+                    setState(() {
+                      _loadingMore = loadingMore;
+                    });
                   },
                   loadMoreOffsetFromBottom: 2,
                   itemBuilder: (context, index) {
@@ -170,31 +170,53 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Image.network(item.avatarUrl),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                    child: Text(item.name),
-                  ),
-                )
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
-              child: Text(item.message),
-            )
-          ],
+    return GestureDetector(
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Image.network(item.avatarUrl),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                      child: Text(item.name),
+                    ),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+                child: Text(item.message),
+              )
+            ],
+          ),
         ),
       ),
+      onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => ItemDetailsPage(item)),
+          ),
     );
+  }
+}
+
+class ItemDetailsPage extends StatelessWidget {
+  final Item item;
+  const ItemDetailsPage(this.item);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.yellow,
+        appBar: new AppBar(
+          title: new Text(item.name),
+        ),
+        body: Container(
+          child: Text(item.message),
+        ));
   }
 }
 
