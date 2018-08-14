@@ -18,3 +18,8 @@
 ## [0.0.4+1] - 15/8/2018
 
 * Updated README
+
+## [0.0.4+2] - 15/8/2018
+
+* *BREAKING CHANGE* separated `onLoadMore` callback. There is now an `onLoadMore` that doesn't pass a boolean and is triggered when more items are being loaded and `onLoadMoreFinished` when more items have finished being loaded.
+* Updated README to explain `onLoadMore` and `onLoadMoreFinished`

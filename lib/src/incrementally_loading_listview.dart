@@ -2,11 +2,13 @@ part of incrementally_loading_listview;
 
 typedef Future LoadMore();
 
-typedef void OnLoadMore(bool);
+typedef void OnLoadMore();
 
 typedef int ItemCount();
 
 typedef bool HasMore();
+
+typedef void OnLoadMoreFinished();
 
 /// A list view that can be used for incrementally loading items when the user scrolls.
 /// This is an extension of the ListView widget that uses the ListView.builder constructor.
@@ -39,6 +41,9 @@ class IncrementallyLoadingListView extends StatefulWidget {
   /// A callback that is triggered when more items are being loaded
   final OnLoadMore onLoadMore;
 
+  /// A callback that is triggered when items have finished being loaded
+  final OnLoadMoreFinished onLoadMoreFinished;
+
   IncrementallyLoadingListView(
       {@required this.hasMore,
       @required this.loadMore,
@@ -57,7 +62,8 @@ class IncrementallyLoadingListView extends StatefulWidget {
       this.addAutomaticKeepAlives: true,
       this.addRepaintBoundaries: true,
       this.cacheExtent,
-      this.onLoadMore});
+      this.onLoadMore,
+      this.onLoadMoreFinished});
 
   @override
   IncrementallyLoadingListViewState createState() {
@@ -114,13 +120,13 @@ class IncrementallyLoadingListViewState
   Stream<bool> loadMore() async* {
     yield _loadingMore;
     if (widget.onLoadMore != null) {
-      widget.onLoadMore(_loadingMore);
+      widget.onLoadMore();
     }
     await widget.loadMore();
     _loadingMore = false;
     yield _loadingMore;
-    if (widget.onLoadMore != null) {
-      widget.onLoadMore(_loadingMore);
+    if (widget.onLoadMoreFinished != null) {
+      widget.onLoadMoreFinished();
     }
   }
 

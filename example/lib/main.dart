@@ -90,9 +90,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     // functions with parameters can also be invoked if needed
                     await _loadMoreItems();
                   },
-                  onLoadMore: (loadingMore) {
+                  onLoadMore: () {
                     setState(() {
-                      _loadingMore = loadingMore;
+                      _loadingMore = true;
+                    });
+                  },
+                  onLoadMoreFinished: () {
+                    setState(() {
+                      _loadingMore = false;
                     });
                   },
                   loadMoreOffsetFromBottom: 2,
