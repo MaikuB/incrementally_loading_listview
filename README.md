@@ -8,13 +8,13 @@ There's a working example that can be run to see how it works.
 
 First import the library
 
-```
+```dart
 import 'package:incrementally_loading_listview/incrementally_loading_listview.dart';
 ```
 
 You can then use the `IncrementallyLoadingListView` widget in a similar way you would with the `ListView.builder` constructor
 
-```
+```dart
 return IncrementallyLoadingListView(
     hasMore: () => _hasMoreItems,
     itemCount: () => items.length,
