@@ -1,3 +1,7 @@
+## [0.1.0] - 25/2/2019
+* **BREAKING CHANGE** Updated rxdart dependency
+* Formatted README. Thanks to PR from [Mohammed Salman](https://github.com/msal4)
+
 ## [0.0.4+3] - 15/8/2018
 
 * Reordering changelog
