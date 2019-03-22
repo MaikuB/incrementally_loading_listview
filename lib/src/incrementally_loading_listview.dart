@@ -1,14 +1,14 @@
 part of incrementally_loading_listview;
 
-typedef Future LoadMore();
+typedef LoadMore = Future Function();
 
-typedef void OnLoadMore();
+typedef OnLoadMore = void Function();
 
-typedef int ItemCount();
+typedef ItemCount = int Function();
 
-typedef bool HasMore();
+typedef HasMore = bool Function();
 
-typedef void OnLoadMoreFinished();
+typedef OnLoadMoreFinished = void Function();
 
 /// A list view that can be used for incrementally loading items when the user scrolls.
 /// This is an extension of the ListView widget that uses the ListView.builder constructor.
@@ -47,27 +47,27 @@ class IncrementallyLoadingListView extends StatefulWidget {
   IncrementallyLoadingListView(
       {@required this.hasMore,
       @required this.loadMore,
-      this.loadMoreOffsetFromBottom: 0,
+      this.loadMoreOffsetFromBottom = 0,
       this.key,
-      this.scrollDirection: Axis.vertical,
-      this.reverse: false,
+      this.scrollDirection = Axis.vertical,
+      this.reverse = false,
       this.controller,
       this.primary,
       this.physics,
-      this.shrinkWrap: false,
+      this.shrinkWrap = false,
       this.padding,
       this.itemExtent,
       @required this.itemBuilder,
       @required this.itemCount,
-      this.addAutomaticKeepAlives: true,
-      this.addRepaintBoundaries: true,
+      this.addAutomaticKeepAlives = true,
+      this.addRepaintBoundaries = true,
       this.cacheExtent,
       this.onLoadMore,
       this.onLoadMoreFinished});
 
   @override
   IncrementallyLoadingListViewState createState() {
-    return new IncrementallyLoadingListViewState();
+    return IncrementallyLoadingListViewState();
   }
 }
 
