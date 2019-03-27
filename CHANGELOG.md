@@ -1,3 +1,6 @@
+## [0.1.0+1] 27/3/2019
+* No functional changes in this release. Changes were to fix formatting to meet Dart guidelines
+
 ## [0.1.0] - 25/2/2019
 * **BREAKING CHANGE** Updated rxdart dependency
 * Formatted README. Thanks to PR from [Mohammed Salman](https://github.com/msal4)
