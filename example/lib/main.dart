@@ -3,18 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:incrementally_loading_listview/incrementally_loading_listview.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
-      theme: new ThemeData(
+      theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -34,7 +34,7 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => new _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _initialLoad = Future.delayed(Duration(seconds: 3), () {
-      items = new List<Item>();
+      items = List<Item>();
       for (var i = 0; i < _numItemsPage; i++) {
         items.add(Item('Item ${i + 1}'));
       }
@@ -70,10 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       backgroundColor: Colors.yellow,
-      appBar: new AppBar(
-        title: new Text(widget.title),
+      appBar: AppBar(
+        title: Text(widget.title),
       ),
       body: FutureBuilder(
           future: _initialLoad,
@@ -154,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ],
                       );
                     }
-                    return new ItemCard(item: item);
+                    return ItemCard(item: item);
                   },
                 );
               default:
@@ -216,8 +216,8 @@ class ItemDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.yellow,
-        appBar: new AppBar(
-          title: new Text(item.name),
+        appBar: AppBar(
+          title: Text(item.name),
         ),
         body: Container(
           child: Text(item.message),

@@ -15,7 +15,7 @@ dev_dependencies:
     sdk: flutter
   incrementally_loading_listview:
     path: ../
-
+  pedantic: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
