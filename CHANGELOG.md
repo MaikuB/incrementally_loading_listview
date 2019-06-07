@@ -1,3 +1,6 @@
+## [0.1.1] 7/6/2019
+* **BREAKING CHANGE** Updated rxdart dependency
+
 ## [0.1.0+1] 27/3/2019
 * No functional changes in this release. Changes were to fix formatting to meet Dart guidelines
 
