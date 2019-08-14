@@ -1,3 +1,6 @@
+## [0.2.0+1] 14/8/2019
+* Update email address in pubspec.yaml
+
 ## [0.2.0] 10/6/2019
 * **BREAKING CHANGE** Updated rxdart dependency
 
