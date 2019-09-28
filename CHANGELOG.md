@@ -1,3 +1,6 @@
+## [0.2.0+2] 28/9/2019
+* Add pub badge to readme
+
 ## [0.2.0+1] 14/8/2019
 * Update email address in pubspec.yaml
 
