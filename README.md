@@ -1,5 +1,7 @@
 # incrementally_loading_listview
 
+[![pub package](https://img.shields.io/pub/v/incrementally_loading_listview.svg)](https://pub.dev/packages/incrementally_loading_listview)
+
 An extension of the Flutter ListView widget for incrementally loading items upon scrolling. This could be used to load paginated data received from API requests. 
 
 **NOTE**: this package depends on [rxdart](https://pub.dev/packages/rxdart). If you run into conflicts with different versions of rxdart, consider using dependency overrides as per this [link](https://flutter.dev/docs/development/packages-and-plugins/using-packages#conflict-resolution)

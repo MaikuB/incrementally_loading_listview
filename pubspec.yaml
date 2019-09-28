@@ -1,6 +1,6 @@
 name: incrementally_loading_listview
 description: An extension of the list view widget for incrementally loading data on scrolling
-version: 0.2.0+1
+version: 0.2.0+2
 author: Michael Bui <michael@dexterx.dev>
 homepage: https://github.com/MaikuB/incrementally_loading_listview
 
