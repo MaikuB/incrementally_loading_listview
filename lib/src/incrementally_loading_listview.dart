@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:rxdart/rxdart.dart';
 
 typedef LoadMore = Future Function();
 
