@@ -1,0 +1,18 @@
+build_example_android_task:
+  container:
+    image: cirrusci/flutter:stable
+  pub_cache:
+    folder: ~/.pub-cache
+  build_script:
+    - cd example
+    - flutter build apk --debug
+
+build_example_ios_task:
+  osx_instance:
+    image: mojave-xcode-11.3-flutter
+  pub_cache:
+    folder: ~/.pub-cache
+  update_pods_script: pod repo update # to fetch all the latest versions
+  build_script:
+    - cd example
+    - flutter build ios --no-codesign --debug
