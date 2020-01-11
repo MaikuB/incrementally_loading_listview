@@ -1,6 +1,0 @@
-include: package:pedantic/analysis_options.1.8.0.yaml
-
-linter:
-  rules:
-    - camel_case_types
-    - unnecessary_new
