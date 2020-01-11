@@ -1,3 +1,10 @@
+## [0.3.0] 11/1/2020
+* **BREAKING CHANGE** Updated rxdart dependency
+* Bump minimum Flutter version to 1.12
+* Update pedantic dependency
+* Recreate example app with minor refactoring
+* Updated example to use shimmer package when showing placeholder item card that is displayed when loading more items
+
 ## [0.2.0+2] 28/9/2019
 * Add pub badge to readme
 
