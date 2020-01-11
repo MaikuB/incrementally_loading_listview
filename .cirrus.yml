@@ -1,0 +1,8 @@
+build_example_android_task:
+  container:
+    image: cirrusci/flutter:stable
+  pub_cache:
+    folder: ~/.pub-cache
+  build_script:
+    - cd example
+    - flutter build apk --debug

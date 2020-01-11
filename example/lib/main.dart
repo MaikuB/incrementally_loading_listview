@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:incrementally_loading_listview/incrementally_loading_listview.dart';
+import 'package:shimmer/shimmer.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,22 +14,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'IncrementallyLoadingListView demo'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -76,91 +67,49 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: FutureBuilder(
-          future: _initialLoad,
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Center(child: CircularProgressIndicator());
-              case ConnectionState.done:
-                return IncrementallyLoadingListView(
-                  hasMore: () => _hasMoreItems,
-                  itemCount: () => items.length,
-                  loadMore: () async {
-                    // can shorten to "loadMore: _loadMoreItems" but this syntax is used to demonstrate that
-                    // functions with parameters can also be invoked if needed
-                    await _loadMoreItems();
-                  },
-                  onLoadMore: () {
-                    setState(() {
-                      _loadingMore = true;
-                    });
-                  },
-                  onLoadMoreFinished: () {
-                    setState(() {
-                      _loadingMore = false;
-                    });
-                  },
-                  loadMoreOffsetFromBottom: 2,
-                  itemBuilder: (context, index) {
-                    final item = items[index];
-                    if ((_loadingMore ?? false) && index == items.length - 1) {
-                      return Column(
-                        children: <Widget>[
-                          ItemCard(item: item),
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                children: <Widget>[
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(
-                                        width: 60.0,
-                                        height: 60.0,
-                                        color: Colors.grey,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            8.0, 0.0, 0.0, 0.0),
-                                        child: Container(
-                                          color: Colors.grey,
-                                          child: Text(
-                                            item.name,
-                                            style: TextStyle(
-                                                color: Colors.transparent),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        0.0, 8.0, 0.0, 0.0),
-                                    child: Container(
-                                      color: Colors.grey,
-                                      child: Text(
-                                        item.message,
-                                        style: TextStyle(
-                                            color: Colors.transparent),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-                    return ItemCard(item: item);
-                  },
-                );
-              default:
-                return Text('Something went wrong');
-            }
-          }),
+        future: _initialLoad,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+            case ConnectionState.done:
+              return IncrementallyLoadingListView(
+                hasMore: () => _hasMoreItems,
+                itemCount: () => items.length,
+                loadMore: () async {
+                  // can shorten to "loadMore: _loadMoreItems" but this syntax is used to demonstrate that
+                  // functions with parameters can also be invoked if needed
+                  await _loadMoreItems();
+                },
+                onLoadMore: () {
+                  setState(() {
+                    _loadingMore = true;
+                  });
+                },
+                onLoadMoreFinished: () {
+                  setState(() {
+                    _loadingMore = false;
+                  });
+                },
+                loadMoreOffsetFromBottom: 2,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  if ((_loadingMore ?? false) && index == items.length - 1) {
+                    return Column(
+                      children: <Widget>[
+                        ItemCard(item: item),
+                        PlaceholderItemCard(item: item),
+                      ],
+                    );
+                  }
+                  return ItemCard(item: item);
+                },
+              );
+            default:
+              return Text('Something went wrong');
+          }
+        },
+      ),
     );
   }
 }
@@ -202,8 +151,61 @@ class ItemCard extends StatelessWidget {
         ),
       ),
       onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => ItemDetailsPage(item)),
+        MaterialPageRoute(builder: (context) => ItemDetailsPage(item)),
+      ),
+    );
+  }
+}
+
+class PlaceholderItemCard extends StatelessWidget {
+  const PlaceholderItemCard({Key key, @required this.item}) : super(key: key);
+
+  final Item item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey[300],
+          highlightColor: Colors.grey[100],
+          child: Column(
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    width: 60.0,
+                    height: 60.0,
+                    color: Colors.white,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                    child: Container(
+                      color: Colors.white,
+                      child: Text(
+                        item.name,
+                        style: TextStyle(color: Colors.transparent),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+                child: Container(
+                  color: Colors.white,
+                  child: Text(
+                    item.message,
+                    style: TextStyle(color: Colors.transparent),
+                  ),
+                ),
+              )
+            ],
           ),
+        ),
+      ),
     );
   }
 }
