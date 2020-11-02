@@ -32,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Item> items;
   bool _loadingMore;
   bool _hasMoreItems;
+  bool _useSeparator;
   int _maxItems = 30;
   int _numItemsPage = 10;
   Future _initialLoad;
@@ -56,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
         items.add(Item('Item ${i + 1}'));
       }
       _hasMoreItems = true;
+      _useSeparator = true;
     });
   }
 
@@ -65,6 +67,17 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Colors.yellow,
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+              icon: Icon(
+                  _useSeparator ? Icons.border_horizontal : Icons.border_clear),
+              tooltip: _useSeparator ? "Not use separator" : "Use separator",
+              onPressed: () {
+                setState(() {
+                  _useSeparator = !_useSeparator;
+                });
+              }),
+        ],
       ),
       body: FutureBuilder(
         future: _initialLoad,
@@ -104,6 +117,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   }
                   return ItemCard(item: item);
                 },
+                separatorBuilder: _useSeparator
+                    ? (context, index) => const Divider(
+                          color: Colors.black,
+                        )
+                    : null,
               );
             default:
               return Text('Something went wrong');
