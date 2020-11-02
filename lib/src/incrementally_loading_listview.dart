@@ -36,6 +36,7 @@ class IncrementallyLoadingListView extends StatefulWidget {
   final EdgeInsetsGeometry padding;
   final double itemExtent;
   final IndexedWidgetBuilder itemBuilder;
+  final IndexedWidgetBuilder separatorBuilder;
   final ItemCount itemCount;
   final bool addAutomaticKeepAlives;
   final bool addRepaintBoundaries;
@@ -62,49 +63,12 @@ class IncrementallyLoadingListView extends StatefulWidget {
       this.itemExtent,
       @required this.itemBuilder,
       @required this.itemCount,
+      this.separatorBuilder,
       this.addAutomaticKeepAlives = true,
       this.addRepaintBoundaries = true,
       this.cacheExtent,
       this.onLoadMore,
       this.onLoadMoreFinished});
-
-  IncrementallyLoadingListView.separated(
-      {@required this.hasMore,
-      @required this.loadMore,
-      this.loadMoreOffsetFromBottom = 0,
-      this.key,
-      this.scrollDirection = Axis.vertical,
-      this.reverse = false,
-      this.controller,
-      this.primary,
-      this.physics,
-      this.shrinkWrap = false,
-      this.padding,
-      this.itemExtent,
-      @required IndexedWidgetBuilder itemBuilder,
-      @required IndexedWidgetBuilder separatorBuilder,
-      @required ItemCount itemCount,
-      this.addAutomaticKeepAlives = true,
-      this.addRepaintBoundaries = true,
-      this.cacheExtent,
-      this.onLoadMore,
-      this.onLoadMoreFinished})
-      : this.itemCount = (() {
-          final count = itemCount();
-          if (count == 0) {
-            return 0;
-          }
-          return count * 2 - 1;
-        }),
-        this.itemBuilder = ((BuildContext context, int index) {
-          final itemIndex = index ~/ 2;
-
-          if (index.isOdd) {
-            return separatorBuilder(context, itemIndex);
-          } else {
-            return itemBuilder(context, itemIndex);
-          }
-        });
 
   @override
   IncrementallyLoadingListViewState createState() {
@@ -123,11 +87,45 @@ class IncrementallyLoadingListViewState
         _loadingMoreSubject.switchMap((shouldLoadMore) => loadMore());
   }
 
+  bool get _isSeparated => widget.separatorBuilder != null;
+
+  int _separatedItemCount() {
+    final count = widget.itemCount();
+    if (count == 0) {
+      return 0;
+    }
+    return count * 2 - 1;
+  }
+
+  Widget _separatedItemBuilder(BuildContext context, int index) {
+    final itemIndex = index ~/ 2;
+
+    if (index.isOdd) {
+      return widget.separatorBuilder(context, itemIndex);
+    } else {
+      return _buildItem(context, itemIndex);
+    }
+  }
+
+  Widget _buildItem(BuildContext context, int index) {
+    if (!_loadingMore &&
+        index == widget.itemCount() - widget.loadMoreOffsetFromBottom - 1 &&
+        widget.hasMore()) {
+      _loadingMore = true;
+      _loadingMoreSubject.add(true);
+    }
+
+    return widget.itemBuilder(context, index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
         stream: _loadingMoreStream,
         builder: (context, snapshot) {
+          final itemCount =
+              _isSeparated ? _separatedItemCount() : widget.itemCount();
+          final itemBuilder = _isSeparated ? _separatedItemBuilder : _buildItem;
           return ListView.builder(
             key: widget.key,
             scrollDirection: widget.scrollDirection,
@@ -138,19 +136,8 @@ class IncrementallyLoadingListViewState
             shrinkWrap: widget.shrinkWrap,
             padding: widget.padding,
             itemExtent: widget.itemExtent,
-            itemBuilder: (itemBuilderContext, index) {
-              if (!_loadingMore &&
-                  index ==
-                      widget.itemCount() -
-                          widget.loadMoreOffsetFromBottom -
-                          1 &&
-                  widget.hasMore()) {
-                _loadingMore = true;
-                _loadingMoreSubject.add(true);
-              }
-              return widget.itemBuilder(itemBuilderContext, index);
-            },
-            itemCount: widget.itemCount(),
+            itemBuilder: itemBuilder,
+            itemCount: itemCount,
             addAutomaticKeepAlives: widget.addAutomaticKeepAlives,
             addRepaintBoundaries: widget.addRepaintBoundaries,
             cacheExtent: widget.cacheExtent,
