@@ -70,6 +70,28 @@ class IncrementallyLoadingListView extends StatefulWidget {
       this.onLoadMore,
       this.onLoadMoreFinished});
 
+  IncrementallyLoadingListView.separated(
+      {@required this.hasMore,
+      @required this.loadMore,
+      this.loadMoreOffsetFromBottom = 0,
+      this.key,
+      this.scrollDirection = Axis.vertical,
+      this.reverse = false,
+      this.controller,
+      this.primary,
+      this.physics,
+      this.shrinkWrap = false,
+      this.padding,
+      this.itemExtent,
+      @required this.itemBuilder,
+      @required this.itemCount,
+      @required this.separatorBuilder,
+      this.addAutomaticKeepAlives = true,
+      this.addRepaintBoundaries = true,
+      this.cacheExtent,
+      this.onLoadMore,
+      this.onLoadMoreFinished});
+
   @override
   IncrementallyLoadingListViewState createState() {
     return IncrementallyLoadingListViewState();

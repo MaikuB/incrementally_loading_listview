@@ -28,14 +28,19 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   List<Item> items;
   bool _loadingMore;
   bool _hasMoreItems;
-  bool _useSeparator;
   int _maxItems = 30;
   int _numItemsPage = 10;
   Future _initialLoad;
+  final List<Tab> tabs = <Tab>[
+    Tab(text: 'Default'),
+    Tab(text: 'Separated'),
+  ];
+  TabController _tabController;
 
   Future _loadMoreItems() async {
     final totalItems = items.length;
@@ -44,7 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
         items.add(Item('Item ${totalItems + i + 1}'));
       }
     });
-
     _hasMoreItems = items.length < _maxItems;
   }
 
@@ -57,78 +61,78 @@ class _MyHomePageState extends State<MyHomePage> {
         items.add(Item('Item ${i + 1}'));
       }
       _hasMoreItems = true;
-      _useSeparator = true;
     });
+    _tabController = TabController(vsync: this, length: tabs.length);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow,
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-              icon: Icon(
-                  _useSeparator ? Icons.border_horizontal : Icons.border_clear),
-              tooltip: _useSeparator ? "Not use separator" : "Use separator",
-              onPressed: () {
-                setState(() {
-                  _useSeparator = !_useSeparator;
-                });
-              }),
-        ],
-      ),
-      body: FutureBuilder(
-        future: _initialLoad,
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-            case ConnectionState.done:
-              return IncrementallyLoadingListView(
-                hasMore: () => _hasMoreItems,
-                itemCount: () => items.length,
-                loadMore: () async {
-                  // can shorten to "loadMore: _loadMoreItems" but this syntax is used to demonstrate that
-                  // functions with parameters can also be invoked if needed
-                  await _loadMoreItems();
-                },
-                onLoadMore: () {
-                  setState(() {
-                    _loadingMore = true;
-                  });
-                },
-                onLoadMoreFinished: () {
-                  setState(() {
-                    _loadingMore = false;
-                  });
-                },
-                loadMoreOffsetFromBottom: 2,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  if ((_loadingMore ?? false) && index == items.length - 1) {
-                    return Column(
-                      children: <Widget>[
-                        ItemCard(item: item),
-                        PlaceholderItemCard(item: item),
-                      ],
-                    );
+        backgroundColor: Colors.yellow,
+        appBar: AppBar(
+          title: Text(widget.title),
+          bottom: TabBar(tabs: tabs, controller: _tabController),
+        ),
+        body: TabBarView(
+          controller: _tabController,
+          children: tabs.asMap().entries.map<Widget>((e) {
+            return FutureBuilder(
+                future: _initialLoad,
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return Center(child: CircularProgressIndicator());
+                    case ConnectionState.done:
+                      return IncrementallyLoadingListView(
+                        hasMore: () => _hasMoreItems,
+                        itemCount: () => items.length,
+                        loadMore: () async {
+                          // can shorten to "loadMore: _loadMoreItems" but this syntax is used to demonstrate that
+                          // functions with parameters can also be invoked if needed
+                          await _loadMoreItems();
+                        },
+                        onLoadMore: () {
+                          setState(() {
+                            _loadingMore = true;
+                          });
+                        },
+                        onLoadMoreFinished: () {
+                          setState(() {
+                            _loadingMore = false;
+                          });
+                        },
+                        loadMoreOffsetFromBottom: 2,
+                        itemBuilder: (context, index) {
+                          final item = items[index];
+                          if ((_loadingMore ?? false) &&
+                              index == items.length - 1) {
+                            return Column(
+                              children: <Widget>[
+                                ItemCard(item: item),
+                                PlaceholderItemCard(item: item),
+                              ],
+                            );
+                          }
+                          return ItemCard(item: item);
+                        },
+                        separatorBuilder: e.key == 1
+                            ? (context, index) => const Divider(
+                                  color: Colors.black,
+                                )
+                            : null,
+                      );
+                    default:
+                      return Text('Something went wrong');
                   }
-                  return ItemCard(item: item);
-                },
-                separatorBuilder: _useSeparator
-                    ? (context, index) => const Divider(
-                          color: Colors.black,
-                        )
-                    : null,
-              );
-            default:
-              return Text('Something went wrong');
-          }
-        },
-      ),
-    );
+                });
+          }).toList(),
+        ));
   }
 }
 
