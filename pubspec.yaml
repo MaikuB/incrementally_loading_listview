@@ -6,7 +6,7 @@ homepage: https://github.com/MaikuB/incrementally_loading_listview
 dependencies:
   flutter:
     sdk: flutter
-  rxdart: ^0.26.0
+  rxdart: ^0.27.1
 
 dev_dependencies:
   flutter_test:
