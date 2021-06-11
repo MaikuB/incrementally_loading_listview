@@ -51,7 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _initialLoad = Future.delayed(Duration(seconds: 3), () {
-      items = List<Item>();
+      // List items = [];
+      items = <Item>[];
       for (var i = 0; i < _numItemsPage; i++) {
         items.add(Item('Item ${i + 1}'));
       }
