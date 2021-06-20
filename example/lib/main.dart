@@ -20,27 +20,21 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, this.title}) : super(key: key);
 
-  final String title;
+  final String? title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
-  List<Item> items;
-  bool _loadingMore;
-  bool _hasMoreItems;
+class _MyHomePageState extends State<MyHomePage> {
+  late List<Item> items;
+  bool? _loadingMore;
+  late bool _hasMoreItems;
   int _maxItems = 30;
   int _numItemsPage = 10;
-  Future _initialLoad;
-  final List<Tab> tabs = <Tab>[
-    Tab(text: 'Default'),
-    Tab(text: 'Separated'),
-  ];
-  TabController _tabController;
+  Future? _initialLoad;
 
   Future _loadMoreItems() async {
     final totalItems = items.length;
@@ -49,6 +43,7 @@ class _MyHomePageState extends State<MyHomePage>
         items.add(Item('Item ${totalItems + i + 1}'));
       }
     });
+
     _hasMoreItems = items.length < _maxItems;
   }
 
@@ -56,90 +51,76 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     super.initState();
     _initialLoad = Future.delayed(Duration(seconds: 3), () {
-      items = List<Item>();
+      // List items = [];
+      items = <Item>[];
       for (var i = 0; i < _numItemsPage; i++) {
         items.add(Item('Item ${i + 1}'));
       }
       _hasMoreItems = true;
     });
-    _tabController = TabController(vsync: this, length: tabs.length);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.yellow,
-        appBar: AppBar(
-          title: Text(widget.title),
-          bottom: TabBar(tabs: tabs, controller: _tabController),
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          children: tabs.asMap().entries.map<Widget>((e) {
-            return FutureBuilder(
-                future: _initialLoad,
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return Center(child: CircularProgressIndicator());
-                    case ConnectionState.done:
-                      return IncrementallyLoadingListView(
-                        hasMore: () => _hasMoreItems,
-                        itemCount: () => items.length,
-                        loadMore: () async {
-                          // can shorten to "loadMore: _loadMoreItems" but this syntax is used to demonstrate that
-                          // functions with parameters can also be invoked if needed
-                          await _loadMoreItems();
-                        },
-                        onLoadMore: () {
-                          setState(() {
-                            _loadingMore = true;
-                          });
-                        },
-                        onLoadMoreFinished: () {
-                          setState(() {
-                            _loadingMore = false;
-                          });
-                        },
-                        loadMoreOffsetFromBottom: 2,
-                        itemBuilder: (context, index) {
-                          final item = items[index];
-                          if ((_loadingMore ?? false) &&
-                              index == items.length - 1) {
-                            return Column(
-                              children: <Widget>[
-                                ItemCard(item: item),
-                                PlaceholderItemCard(item: item),
-                              ],
-                            );
-                          }
-                          return ItemCard(item: item);
-                        },
-                        separatorBuilder: e.key == 1
-                            ? (context, index) => const Divider(
-                                  color: Colors.black,
-                                )
-                            : null,
-                      );
-                    default:
-                      return Text('Something went wrong');
+      backgroundColor: Colors.yellow,
+      appBar: AppBar(
+        title: Text(widget.title!),
+      ),
+      body: FutureBuilder(
+        future: _initialLoad,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+            case ConnectionState.done:
+              return IncrementallyLoadingListView(
+                hasMore: () => _hasMoreItems,
+                itemCount: () => items.length,
+                loadMore: () async {
+                  // can shorten to "loadMore: _loadMoreItems" but this syntax is used to demonstrate that
+                  // functions with parameters can also be invoked if needed
+                  await _loadMoreItems();
+                },
+                onLoadMore: () {
+                  debugPrint('loading more');
+                  setState(() {
+                    _loadingMore = true;
+                  });
+                },
+                onLoadMoreFinished: () {
+                  setState(() {
+                    _loadingMore = false;
+                  });
+                },
+                separatorBuilder: (_, __) => Divider(),
+                loadMoreOffsetFromBottom: 2,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  if ((_loadingMore ?? false) && index == items.length - 1) {
+                    return Column(
+                      children: <Widget>[
+                        ItemCard(item: item),
+                        PlaceholderItemCard(item: item),
+                      ],
+                    );
                   }
-                });
-          }).toList(),
-        ));
+                  return ItemCard(item: item);
+                },
+              );
+            default:
+              return Text('Something went wrong');
+          }
+        },
+      ),
+    );
   }
 }
 
 class ItemCard extends StatelessWidget {
   const ItemCard({
-    Key key,
-    @required this.item,
+    Key? key,
+    required this.item,
   }) : super(key: key);
 
   final Item item;
@@ -180,7 +161,7 @@ class ItemCard extends StatelessWidget {
 }
 
 class PlaceholderItemCard extends StatelessWidget {
-  const PlaceholderItemCard({Key key, @required this.item}) : super(key: key);
+  const PlaceholderItemCard({Key? key, required this.item}) : super(key: key);
 
   final Item item;
 
@@ -190,8 +171,8 @@ class PlaceholderItemCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Shimmer.fromColors(
-          baseColor: Colors.grey[300],
-          highlightColor: Colors.grey[100],
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
           child: Column(
             children: <Widget>[
               Row(
