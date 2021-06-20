@@ -26,30 +26,30 @@ class IncrementallyLoadingListView extends StatefulWidget {
   /// This is relative to the bottom of the list and has a default value of 0 so that it loads when the last item within the list view scrolls into view.
   /// As an example, setting this to 1 would attempt to load more items when the second last item within the list view scrolls into view
   final int loadMoreOffsetFromBottom;
-  final Key key;
+  final Key? key;
   final Axis scrollDirection;
   final bool reverse;
-  final ScrollController controller;
-  final bool primary;
-  final ScrollPhysics physics;
+  final ScrollController? controller;
+  final bool? primary;
+  final ScrollPhysics? physics;
   final bool shrinkWrap;
-  final EdgeInsetsGeometry padding;
-  final double itemExtent;
+  final EdgeInsetsGeometry? padding;
+  final double? itemExtent;
   final IndexedWidgetBuilder itemBuilder;
   final ItemCount itemCount;
   final bool addAutomaticKeepAlives;
   final bool addRepaintBoundaries;
-  final double cacheExtent;
+  final double? cacheExtent;
 
   /// A callback that is triggered when more items are being loaded
-  final OnLoadMore onLoadMore;
+  final OnLoadMore? onLoadMore;
 
   /// A callback that is triggered when items have finished being loaded
-  final OnLoadMoreFinished onLoadMoreFinished;
+  final OnLoadMoreFinished? onLoadMoreFinished;
 
   IncrementallyLoadingListView(
-      {@required this.hasMore,
-      @required this.loadMore,
+      {required this.hasMore,
+      required this.loadMore,
       this.loadMoreOffsetFromBottom = 0,
       this.key,
       this.scrollDirection = Axis.vertical,
@@ -60,8 +60,8 @@ class IncrementallyLoadingListView extends StatefulWidget {
       this.shrinkWrap = false,
       this.padding,
       this.itemExtent,
-      @required this.itemBuilder,
-      @required this.itemCount,
+      required this.itemBuilder,
+      required this.itemCount,
       this.addAutomaticKeepAlives = true,
       this.addRepaintBoundaries = true,
       this.cacheExtent,
@@ -78,7 +78,7 @@ class IncrementallyLoadingListViewState
     extends State<IncrementallyLoadingListView> {
   bool _loadingMore = false;
   final PublishSubject<bool> _loadingMoreSubject = PublishSubject<bool>();
-  Stream<bool> _loadingMoreStream;
+  Stream<bool>? _loadingMoreStream;
 
   IncrementallyLoadingListViewState() {
     _loadingMoreStream =
@@ -123,13 +123,13 @@ class IncrementallyLoadingListViewState
   Stream<bool> loadMore() async* {
     yield _loadingMore;
     if (widget.onLoadMore != null) {
-      widget.onLoadMore();
+      widget.onLoadMore!();
     }
     await widget.loadMore();
     _loadingMore = false;
     yield _loadingMore;
     if (widget.onLoadMoreFinished != null) {
-      widget.onLoadMoreFinished();
+      widget.onLoadMoreFinished!();
     }
   }
 
