@@ -1,3 +1,8 @@
+## [1.0.0] 20/6/2021
+
+* Migrated to null safety. Thanks to PR from [Keith Black](https://github.com/tkeithblack)
+* Added `separatorBuilder` property. Thanks to PR from [Nikita Avdosev](https://github.com/avdosev)
+
 ## [0.3.0] 11/1/2020
 * **BREAKING CHANGE** Updated rxdart dependency
 * Bump minimum Flutter version to 1.12
