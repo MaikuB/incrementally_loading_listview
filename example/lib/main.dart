@@ -20,21 +20,21 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, this.title}) : super(key: key);
 
-  final String title;
+  final String? title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Item> items;
-  bool _loadingMore;
-  bool _hasMoreItems;
+  late List<Item> items;
+  bool? _loadingMore;
+  late bool _hasMoreItems;
   int _maxItems = 30;
   int _numItemsPage = 10;
-  Future _initialLoad;
+  Future? _initialLoad;
 
   Future _loadMoreItems() async {
     final totalItems = items.length;
@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Colors.yellow,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title!),
       ),
       body: FutureBuilder(
         future: _initialLoad,
@@ -117,8 +117,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class ItemCard extends StatelessWidget {
   const ItemCard({
-    Key key,
-    @required this.item,
+    Key? key,
+    required this.item,
   }) : super(key: key);
 
   final Item item;
@@ -159,7 +159,7 @@ class ItemCard extends StatelessWidget {
 }
 
 class PlaceholderItemCard extends StatelessWidget {
-  const PlaceholderItemCard({Key key, @required this.item}) : super(key: key);
+  const PlaceholderItemCard({Key? key, required this.item}) : super(key: key);
 
   final Item item;
 
@@ -169,8 +169,8 @@ class PlaceholderItemCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Shimmer.fromColors(
-          baseColor: Colors.grey[300],
-          highlightColor: Colors.grey[100],
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
           child: Column(
             children: <Widget>[
               Row(
