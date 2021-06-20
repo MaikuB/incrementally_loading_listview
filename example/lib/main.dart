@@ -92,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     _loadingMore = false;
                   });
                 },
+                separatorBuilder: (_, __) => Divider(),
                 loadMoreOffsetFromBottom: 2,
                 itemBuilder: (context, index) {
                   final item = items[index];
