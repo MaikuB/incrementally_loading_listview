@@ -83,7 +83,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   await _loadMoreItems();
                 },
                 onLoadMore: () {
-                  debugPrint('loading more');
                   setState(() {
                     _loadingMore = true;
                   });
